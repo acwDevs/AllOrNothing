@@ -15,37 +15,53 @@ function AddBlip(coords, sprite, colour, text)
     AddTextComponentString(text)
     EndTextCommandSetBlipName(blip)
 end
-AddBlip(coords, 1, 5, "All Or Nothing")
-
---Marker Thread
+local blip = AddBlip(coords, 1, 5, "All Or Nothing")
+local matchPedID = GetConvarInt("AllOrNothingMatchPed", 0)
+local matchPed = 0
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)
-        if marker == nil then
-            marker = DrawMarker(1, coords.x, coords.y, coords.z - 1, 0, 0, 0, 0, 0, 0, 2.0, 2.0, 2.0, 255, 0, 0, 200, false, true, 2, false, nil, nil, false)
+        Citizen.Wait(200)
+        local playerCoords = GetEntityCoords(PlayerPedId())
+        local distance = #(playerCoords - coords)
+        if distance < 5.0 then 
+            --get network id for match ped
+            matchPedID = GetConvarInt("AllOrNothingMatchPed", 0)
+            matchPedID = json.decode(matchPedID)
+            matchPed = NetworkGetEntityFromNetworkId(matchPedID)
+            -- Set Entity Invicible
+            SetEntityInvincible(matchPed, true)
+            -- No reaction
+            SetPedSeeingRange(matchPed, 0.0)
+            SetPedHearingRange(matchPed, 0.0)
+            SetPedAlertness(matchPed, 0)
+            SetPedFleeAttributes(matchPed, 0, 0)
+            SetBlockingOfNonTemporaryEvents(matchPed, true)
+            -- Set Entity Health
         end
-        
-        DrawMarker(1, coords.x, coords.y, coords.z - 1, 0, 0, 0, 0, 0, 0, 2.0, 2.0, 2.0, 255, 0, 0, 200, false, true, 2, false, nil, nil, false)
+        while distance < 5.0 do
+            Citizen.Wait(0)
+            local playerCount = GetConvarInt("AllOrNothingPC", 0)
+            DrawText3D(coords.x, coords.y, coords.z + 1, playerCount.."/"..Config.MaxPlayers.." players")
+            DrawText3D(coords.x, coords.y, coords.z, "Press E to enter the match")
+            -- DrawMarker(1, coords.x, coords.y, coords.z - 1, 0, 0, 0, 0, 0, 0, 2.0, 2.0, 2.0, 255, 0, 0, 200, false, true, 2, false, nil, nil, false)
+            playerCoords = GetEntityCoords(PlayerPedId())
+            distance = #(playerCoords - coords)
+            if IsControlJustPressed(0, 38) then -- E key
+                -- Do something when the player interacts with the marker
+                TriggerEvent("enterplayerclient")
+                print("Player entered the game")
+            end
+        end
     end
 end)
 
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        if marker ~= nil then
-            local playerCoords = GetEntityCoords(PlayerPedId())
-            local distance = #(playerCoords - coords)
-            if distance < 1.5 then
-                local playerCount = GetConvarInt("AllOrNothingPC", 0)
-                DrawText3D(coords.x, coords.y, coords.z + 1, playerCount.."/"..Config.MaxPlayers.." players")
-                DrawText3D(coords.x, coords.y, coords.z, "Press E to enter the match")
-                if IsControlJustPressed(0, 38) then -- E key
-                    -- Do something when the player interacts with the marker
-                    TriggerEvent("enterplayerclient")
-                    print("Player entered the game")
-                end
-            end
-        end
+--On Resource stop
+AddEventHandler("onResourceStop", function(resource)
+    if resource == GetCurrentResourceName() then
+        --Remove blip
+        RemoveBlip(blip)
+        --Remove match ped
+        DeletePed(matchPed)
     end
 end)
 
@@ -121,6 +137,7 @@ RegisterNetEvent("leaveplayerclient")
 AddEventHandler("leaveplayerclient", function()
     playerEntered = false
 end)
+
 
 RegisterNetEvent("tooManyPlayersClientMessage")
 AddEventHandler("tooManyPlayersClientMessage", function()
