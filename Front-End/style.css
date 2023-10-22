@@ -1,0 +1,14 @@
+#hostMenu {
+    visibility: hidden;
+}
+#playerManagementMenu {
+    visibility: hidden;
+}
+
+html {
+    background: transparent;
+}
+
+
+
+

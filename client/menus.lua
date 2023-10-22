@@ -268,3 +268,49 @@ Citizen.CreateThread(function()
     end
 end)
 
+-- RegisterNUICallback('test', function(data, cb)
+--     print("test")
+-- end)
+
+--Set focus state.
+local focused = false
+function setFocus(bool)
+    focused = bool
+    SetNuiFocus(bool,bool)
+end
+
+--RegisterNUICallback setFocus
+RegisterNUICallback('setFocus', function(data, cb)
+    setFocus(data.focus)
+    cb({})
+end)
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+        if(IsControlJustPressed(0,256))then
+            focused = not focused
+            print(focused)
+            SetNuiFocus(focused, focused)
+            SendNUIMessage({
+                type = "hostMenu",
+                focus = focused
+            })
+        end
+    end
+end)
+
+
+
+
+--RegisterNUICallback getPlayerList
+RegisterNUICallback('getPlayerList', function(data, cb)
+    local players = GetConvar("playerIDs",tostring({}))
+    local players = json.decode(players)
+    local names = GetConvar("playerNames",tostring({}))
+    local names = json.decode(names)
+    if players and names then 
+        cb({players = players, names = names})
+    end
+end)
+

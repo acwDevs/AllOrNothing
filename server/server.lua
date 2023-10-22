@@ -102,17 +102,20 @@ function Game:addPlayer(player)
     table.insert(self.players, player)
     if self.playerCount == 0 then 
         table.insert(self.team1players, player)
+        self.playerCount = self.playerCount + 1
         self.team1Lives = self.team1Lives + 1
         --Trigger client set game master
         TriggerClientEvent("setgamemasterclient", player, true)
         --TriggerClientEvent("setplayerclient", player, true)
         self.gameMaster = player
-    elseif self.playerCount < (self.maxPlayers / 2) then
+    elseif self.playerCount < (self.maxPlayers / 2) + 1 then
+        self.playerCount = self.playerCount + 1
         table.insert(self.team1players, player)
         self.team1Lives = self.team1Lives + 1
         --Trigger client set player
         TriggerClientEvent("setplayerclient", player, true)
     elseif self.playerCount < self.maxPlayers then
+        self.playerCount = self.playerCount + 1
         table.insert(self.team2players, player)
         self.team2Lives = self.team2Lives + 1
     else
@@ -120,13 +123,14 @@ function Game:addPlayer(player)
     end
     -- print(json.encode(self.players))
     --Get player names from esx 
+    local names = {}
     for i, player in ipairs(self.players) do
-        self.playerCount = self.playerCount + 1
         TriggerClientEvent("playerEnteredGameMessage", player)
         local xPlayer = ESX.GetPlayerFromId(player)
-        table.insert(self.names, xPlayer.name)
+        table.insert(names, xPlayer.name)
         -- print(xPlayer.name)
     end
+    self.names = names
     -- Get names of team1
     local team1Names = {}
     for i, player in ipairs(self.team1players) do

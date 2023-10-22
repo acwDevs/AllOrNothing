@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="UIKit/css/uikit.min.css" />
+        <link rel="stylesheet" href="style.css" />
+        <script src="UIKit/js/uikit.min.js"></script>
+        <script src="UIKit/js/uikit-icons.min.js"></script>
+    </head>
+    <body>
+        <!-- Host Main Menu -->
+        <div id = "hostMenu" class="uk-container uk-container-center uk-position-center uk-border-rounded">
+            <div class="uk-grid">
+                <div class="uk-width-1-1">
+                    <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
+                        <h3 class="uk-card-title uk-text-center uk-text-bold">Host Menu</h3>
+                        <table  class="uk-table uk-table-striped">
+                            <thead>
+                            </thead>
+                            <tbody id = "hostMenuBody">
+                                <tr>
+                                <td class="uk-margin uk-animation-toggle" tabindex="0">
+                                    <button id = "playerManagementButton" class="uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="button">Player Management</button>
+                                    <button id = "locationManagementButton" class="uk-button uk-button-primary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Location Management</button>
+                                    <button id = "weaponManagementButton" class="uk-button uk-button-primary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Weapon Management</button>
+                                    <button id = "hostMenuCloseButton" class="uk-button uk-button-secondary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Close Menu</button>
+                                </td>
+                                </tr>
+                            </tbody>
+                        </table> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Player Management Div -->
+        <div>
+            <div id = "playerManagementMenu" class="uk-container uk-container-center uk-position-center uk-border-rounded">
+                <div class="uk-grid">
+                    <div class="uk-width-1-1">
+                        <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
+                            <h3 class="uk-card-title uk-text-center uk-text-bold">Player Management</h3>
+                            <table  class="uk-table uk-table-striped">
+                                <thead>
+                                </thead>
+                                <tbody id = "playerManagementBody">
+                                    <tr>
+                                    <td class="uk-margin">
+                                        <button id = "playerManagementCloseMenuButton" class=" closeMenuButton uk-button uk-button-secondary uk-width-1-1 uk-border-rounded closeButton" type="button">Close Menu</button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="link.js"></script> 
+    </body>
+</html>

@@ -36,6 +36,17 @@ contributor {
     'Frazzle'
 }
 
+--Setup nui
+ui_page 'Front-End/index.html'
+
+files {
+    'Front-End/index.html',
+    'Front-End/*.js',
+    'Front-End/*.css',
+    'Front-End/UIKit/css/*.css',
+    'Front-End/UIKit/js/*.js',
+}
+
 -- exclude file from encryption
 escrow_ignore {
     'shared/convars.lua',
