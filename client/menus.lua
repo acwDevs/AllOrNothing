@@ -141,6 +141,15 @@ AddEventHandler("setplayerclient", function(status)
     player = status
 end)
 
+--Get Team Player List Client
+RegisterNetEvent("getTeamPlayerListClient")
+AddEventHandler("getTeamPlayerListClient", function(teamOne, teamTwo)
+    print('here')
+    SendNUIMessage({
+        type = "teamListUpdate"
+    })
+end)
+
 local coords = Config.MarkerCoords
 -- Update the menu pool
 Citizen.CreateThread(function()
@@ -157,7 +166,7 @@ Citizen.CreateThread(function()
                     type = "hostMenu",
                     focus = focused
                 })
-            end
+            
                 -- playerManageMenu:ClearMain()          
                 -- local players = GetConvar("playerIDs",tostring({}))
                 -- local players = json.decode(players)
@@ -251,15 +260,18 @@ Citizen.CreateThread(function()
                     end
                 end
                 if player == true then 
+                    local wait = 100
                     while player == true and inRange == true do
                         Citizen.Wait(0)
                         -- Define the location's coordinates
                         playerCoords = GetEntityCoords(playerPed)
                         distance = GetDistanceBetweenCoords(playerCoords, Config.MarkerCoords, true)
                         if distance < 5.0 then
+                            wait = 0
                             -- Player is close enough, do something
                             DrawText3D(coords.x, coords.y, coords.z + 0.2, "Press F to enter the Player Menu")
                         else
+                            wait = 100
                             inRange = false
                             -- Player is too far away
                         end
@@ -328,6 +340,17 @@ RegisterNUICallback('getWeaponList', function(data, cb)
     end
 
         cb({weapons = names})
+end)
+
+--RegisterNUICallback getTeamPlayerList
+RegisterNUICallback('getTeamsPlayerList', function(data, cb)
+    local team1Names = GetConvar("AllOrNothingTeam1",tostring({}))
+    local team1Names = json.decode(team1Names)
+    local team2Names = GetConvar("AllOrNothingTeam2",tostring({}))
+    local team2Names = json.decode(team2Names)
+    if team1Names and team2Names then 
+        cb({teamOne = team1Names, teamTwo = team2Names})
+    end
 end)
 
 --RegisterNUICallback kickPlayer

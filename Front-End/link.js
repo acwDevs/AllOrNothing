@@ -8,6 +8,9 @@ let playerManagementBody = document.getElementById('playerManagementBody');
 let playerManagementCloseMenuButton = document.getElementById('playerManagementCloseMenuButton');
 let confirmKickPlayerMenu = document.getElementById('confirmKickPlayerMenu');
 let confirmKickPlayerButton = document.getElementById('confirmKickPlayerButton');
+let teamOnePlayerList = document.getElementById('teamOnePlayerList');
+let teamTwoPlayerList = document.getElementById('teamTwoPlayerList');
+let teamPlayersDisplay = document.getElementById('teamPlayersDisplay');
 
 function resetHostVisibility() {
     hostMenu.style.visibility = 'hidden';
@@ -31,8 +34,6 @@ function resetWeaponManagementVisibility() {
     weaponManagementMenu.style.visibility = 'hidden';
     weaponManagementMenu.classList.remove("uk-animation-fade");
 }
-
-
 
 function kickPlayer(id) {
     resetPlayerManagementVisibility()
@@ -132,6 +133,31 @@ function setLocation(checkbox, locationName) {
     })
     .then(resp => {
         console.log(resp);
+    });
+}
+
+function getTeamsPlayerList() {
+    fetch(`https://${GetParentResourceName()}/getTeamsPlayerList`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body:""
+    })
+    .then(resp => {
+        return resp.json();
+    })
+    .then(resp => {
+        let teamOneHTML = ``;
+        let teamTwoHTML = ``;
+        for (let i = 0; i < resp.teamOne.length; i++) {
+            teamOneHTML += `<button class="playerNameButtons Active-Button uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="button">${resp.teamOne[i]}</button>`;
+        }
+        for (let i = 0; i < resp.teamTwo.length; i++) {
+            teamTwoHTML += `<button class="playerNameButtons Active-Button uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="button">${resp.teamTwo[i]}</button>`;
+        }
+        teamOnePlayerList.innerHTML = teamOneHTML;
+        teamTwoPlayerList.innerHTML = teamTwoHTML;
     });
 }
 
@@ -255,11 +281,7 @@ fetch(`https://${GetParentResourceName()}/getPlayerList`, {
 
 };
 
-// playerManagementCloseMenuButton.onclick = function() {
-//     playerManagementMenu.style.visibility = 'hidden';
-//     hostMenu.style.visibility = 'visible';
-//     hostMenu.classList.add("uk-position-center");
-// }
+
 
 function closerPlayerManager() {
     resetPlayerManagementVisibility()
@@ -293,6 +315,9 @@ window.addEventListener('message', function(event) {
         else if (event.data.focus === false) {
             resetHostVisibility()
         }
+    }
+    if(event.data.type === 'teamListUpdate') {
+        getTeamsPlayerList();
     }
 });
 

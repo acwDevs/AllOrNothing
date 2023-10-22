@@ -106,7 +106,6 @@ function Game:addPlayer(player)
         self.team1Lives = self.team1Lives + 1
         --Trigger client set game master
         TriggerClientEvent("setgamemasterclient", player, true)
-        --TriggerClientEvent("setplayerclient", player, true)
         self.gameMaster = player
     elseif self.playerCount < (self.maxPlayers / 2)then
         self.playerCount = self.playerCount + 1
@@ -118,6 +117,7 @@ function Game:addPlayer(player)
         self.playerCount = self.playerCount + 1
         table.insert(self.team2players, player)
         self.team2Lives = self.team2Lives + 1
+        TriggerClientEvent("setplayerclient", player, true)
     else
         TriggerClientEvent("tooManyPlayersClientMessage", player)
     end
@@ -148,9 +148,12 @@ function Game:addPlayer(player)
     SetConvarReplicated("AllOrNothingTeam1", json.encode(team1Names))
     SetConvarReplicated("AllOrNothingTeam2", json.encode(team2Names))
     SetConvarReplicated("AllOrNothingPC", tostring(self.playerCount))
-    for k,v in ipairs(self.names) do print(k,v) end
     SetConvarReplicated("playerIDs", json.encode(self.players))
     SetConvarReplicated("playerNames", json.encode(self.names))
+    -- for k,v in ipairs(self.names) do print(k,v) end
+    for i, player in ipairs(self.players) do
+        TriggerClientEvent("getTeamPlayerListClient", player)
+    end
     -- if self.playerCount == self.maxPlayers then
     --     self:startGame()
     -- end
@@ -471,6 +474,9 @@ function Game:changeTeam(player, newTeam)
         end
         SetConvarReplicated("AllOrNothingTeam2", json.encode(self.team2Names))
         SetConvarReplicated("AllOrNothingTeam1", json.encode(self.team1Names))
+        for i, player in ipairs(self.players) do
+            TriggerClientEvent("getTeamPlayerListClient", player)
+        end
     end
     -- Add player to new team
     if newTeam == self.team1Name then

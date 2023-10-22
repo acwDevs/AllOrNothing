@@ -21,6 +21,14 @@
     max-width: 100%;
     overflow: hidden;
 }
+.TeamsMenu {
+    width: 800px;
+    height: 400px;
+}
+
+.playerNameButtons {
+    width: 200px
+}
 
 .Active-Button {
     border: solid 10px;
