@@ -22,10 +22,11 @@
                             <tbody id = "hostMenuBody">
                                 <tr>
                                 <td class="uk-margin uk-animation-toggle" tabindex="0">
-                                    <button id = "playerManagementButton" class="uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="button">Player Management</button>
-                                    <button id = "locationManagementButton" class="uk-button uk-button-primary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Location Management</button>
-                                    <button id = "weaponManagementButton" class="uk-button uk-button-primary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Weapon Management</button>
-                                    <button id = "hostMenuCloseButton" class="uk-button uk-button-secondary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Close Menu</button>
+                                    <button id = "startGameButton" onclick = "startGame()" class="Active-Button uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="button">Start Game</button>
+                                    <button id = "playerManagementButton" class="Active-Button uk-button uk-button-primary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Player Management</button>
+                                    <button id = "locationManagementButton" class = "Active-Button uk-button uk-button-primary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Location Management</button>
+                                    <button id = "weaponManagementButton" class="Active-Button uk-button uk-button-primary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Weapon Management</button>
+                                    <button id = "hostMenuCloseButton" class="Active-Button uk-button uk-button-secondary uk-align-center uk-width-1-1 uk-border-rounded" type="button">Close Menu</button>
                                 </td>
                                 </tr>
                             </tbody>
@@ -36,7 +37,7 @@
         </div>
         <!-- Player Management Div -->
         <div>
-            <div id = "playerManagementMenu" class="uk-container uk-container-center uk-position-center uk-border-rounded">
+            <div id = "playerManagementMenu" class="uk-animation-fast uk-container uk-container-center uk-position-center uk-border-rounded">
                 <div class="uk-grid">
                     <div class="uk-width-1-1">
                         <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
@@ -47,7 +48,7 @@
                                 <tbody id = "playerManagementBody">
                                     <tr>
                                     <td class="uk-margin">
-                                        <button id = "playerManagementCloseMenuButton" class=" closeMenuButton uk-button uk-button-secondary uk-width-1-1 uk-border-rounded closeButton" type="button">Close Menu</button>
+                                        <button id = "playerManagementCloseMenuButton" class="Active-Button closeMenuButton uk-button uk-button-secondary uk-width-1-1 uk-border-rounded closeButton" type="button">Close Menu</button>
                                     </td>
                                     </tr>
                                 </tbody>
@@ -57,6 +58,63 @@
                 </div>
             </div>
         </div>
+        <!-- Confirm Kick Player Div -->
+        <div>
+            <div id = "confirmKickPlayerMenu" class="uk-animation-fast uk-position-center uk-border-rounded">
+                <div class="uk-grid">
+                    <div class="uk-width-1-1">
+                        <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
+                            <h3 class="uk-card-title uk-text-center uk-text-bold">Confirm Kick Player</h3>
+                            <table  class="uk-table uk-table-striped">
+                                <thead>
+                                </thead>
+                                <tbody id = "confirmKickPlayerBody">
+                                    <tr>
+                                    <td class="uk-margin">
+                                        <button id = "confirmKickPlayerButton" class="Active-Button uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="button">Confirm</button>
+                                        <button id = "cancelKickPlayerButton"  onclick = "resetKickPlayerVisibility()" class="Active-Button uk-button uk-button-secondary uk-width-1-1 uk-border-rounded" type="button">Cancel</button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Location Management Div -->
+        <div>
+            <div id = "LocationManagementMenu" class="uk-animation-fast uk-container uk-container-center uk-position-center uk-border-rounded">
+                <div class="uk-grid">
+                    <div class="uk-width-1-1">
+                        <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
+                            <h3 class="uk-card-title uk-text-center uk-text-bold">Location Management</h3>
+                            <form id = "locationManagementBody" class="">
+                                <div class="uk-margin">
+                                    <label>
+                                        <input class="uk-checkbox" type="checkbox"> Checkbox Label</input>
+                                    </label>
+                                </div>
+                                <input class = "Active-Button uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="submit" value="Submit">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Weapon Management Div -->
+        <div>
+            <div id = "weaponManagementMenu" class="uk-animation-fast uk-container uk-container-center uk-position-center uk-border-rounded">
+                <div class="uk-grid">
+                    <div class="uk-width-1-1">
+                        <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
+                            <h3 class="uk-card-title uk-text-center uk-text-bold">Weapon Management</h3>
+                            <form id = "weaponManagementBody" class="">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <script src="link.js"></script> 
     </body>
 </html>

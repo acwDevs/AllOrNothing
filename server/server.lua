@@ -108,7 +108,7 @@ function Game:addPlayer(player)
         TriggerClientEvent("setgamemasterclient", player, true)
         --TriggerClientEvent("setplayerclient", player, true)
         self.gameMaster = player
-    elseif self.playerCount < (self.maxPlayers / 2) + 1 then
+    elseif self.playerCount < (self.maxPlayers / 2)then
         self.playerCount = self.playerCount + 1
         table.insert(self.team1players, player)
         self.team1Lives = self.team1Lives + 1
@@ -157,6 +157,10 @@ function Game:addPlayer(player)
 end
 -- Define the startGame method
 function Game:startGame()
+    print(self.team1Lives, self.team2Lives)
+    if self.team1Lives < 1 or self.team2Lives < 1 then
+        return
+    end
     for i, player in ipairs(self.players) do
         RemoveAllPedWeapons(player, true)
     end
@@ -554,7 +558,6 @@ AddEventHandler('setweapon', function(weaponName, state)
             weapon[2] = state
         end
     end
-    --print(json.encode(WeaponPool))
 end)
 
 -- Set location event
@@ -567,5 +570,4 @@ AddEventHandler('setlocation', function(locationName,state)
             location[2] = state
         end
     end
-    print(json.encode(LocationPool))
 end)

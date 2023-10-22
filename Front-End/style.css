@@ -4,6 +4,30 @@
 #playerManagementMenu {
     visibility: hidden;
 }
+#LocationManagementMenu {
+    visibility: hidden;
+}
+#weaponManagementMenu {
+    visibility: hidden;
+}
+
+#confirmKickPlayerMenu {
+    visibility: hidden;
+}
+
+#startGameButton {
+    --offset: 3px;
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.Active-Button {
+    border: solid 10px;
+    transition: border-width 0.1s linear;
+}
+  
+.Active-Button:hover { border-width: 5px; }
 
 html {
     background: transparent;

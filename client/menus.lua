@@ -1,6 +1,13 @@
 local gameMaster = false
 local player = false
 
+--Set focus state.
+local focused = false
+function setFocus(bool)
+    focused = bool
+    SetNuiFocus(bool,bool)
+end
+
 function GetResolution()
     local W, H = GetActiveScreenResolution()
     if (W/H) > 3.5 then
@@ -137,50 +144,44 @@ end)
 local coords = Config.MarkerCoords
 -- Update the menu pool
 Citizen.CreateThread(function()
-    local wait = 0
     while true do
-        Citizen.Wait(wait)
-        if gameMaster == true then
-            wait = 0
-            hostMenu.pool:ProcessMenus()
-            playerManageMenu.pool:ProcessMenus()
-            locationMenu.pool:ProcessMenus()
-            weaponMenu.pool:ProcessMenus()
-            -- Player is in a round, do something
-        elseif player == true then
-            wait = 0
+        Citizen.Wait(0)
             playerMenu.pool:ProcessMenus()
-        else
-            wait = 100
-            -- Player is not in a round, do something
-        end
         --Press F to open the menu
         if IsControlJustPressed(0,49) then -- F key
             if gameMaster == true then
-                playerManageMenu:ClearMain()          
-                local players = GetConvar("playerIDs",tostring({}))
-                local players = json.decode(players)
-                local names = GetConvar("playerNames",tostring({}))
-                local names = json.decode(names)
-                if players and names then 
-                    for i, player in ipairs(players) do
-                        local subMenu = playerManageMenu.pool:AddSubMenu(playerManageMenu.main, names[i],player,1)
-                        subMenu = subMenu.SubMenu
-                        local kick = NativeUI.CreateItem("Kick", "Kick the player from the game")
-                        kick.Activated = function(sender, item)
+                focused = not focused
+                print(focused)
+                SetNuiFocus(focused, focused)
+                SendNUIMessage({
+                    type = "hostMenu",
+                    focus = focused
+                })
+            end
+                -- playerManageMenu:ClearMain()          
+                -- local players = GetConvar("playerIDs",tostring({}))
+                -- local players = json.decode(players)
+                -- local names = GetConvar("playerNames",tostring({}))
+                -- local names = json.decode(names)
+                -- if players and names then 
+                --     for i, player in ipairs(players) do
+                --         local subMenu = playerManageMenu.pool:AddSubMenu(playerManageMenu.main, names[i],player,1)
+                --         subMenu = subMenu.SubMenu
+                --         local kick = NativeUI.CreateItem("Kick", "Kick the player from the game")
+                --         kick.Activated = function(sender, item)
                             
-                            if GetPlayerFromServerId(player) == NetworkGetPlayerIndexFromPed(GetPlayerPed(-1)) then
-                                gameMaster = false
-                                TriggerServerEvent("endgameserverside")
-                            end
-                            TriggerServerEvent("kickplayerserverside", player)
-                            subMenu:Visible(false)
-                            subMenu = nil
-                        end
-                        subMenu:AddItem(kick)
-                    end
-                end
-                hostMenu.main:Visible(not hostMenu.main:Visible())
+                --             if GetPlayerFromServerId(player) == NetworkGetPlayerIndexFromPed(GetPlayerPed(-1)) then
+                --                 gameMaster = false
+                --                 TriggerServerEvent("endgameserverside")
+                --             end
+                --             TriggerServerEvent("kickplayerserverside", player)
+                --             subMenu:Visible(false)
+                --             subMenu = nil
+                --         end
+                --         subMenu:AddItem(kick)
+                --     end
+                -- end
+                -- hostMenu.main:Visible(not hostMenu.main:Visible())
             end
             if player == true then
                 team1:Clear()
@@ -272,13 +273,6 @@ end)
 --     print("test")
 -- end)
 
---Set focus state.
-local focused = false
-function setFocus(bool)
-    focused = bool
-    SetNuiFocus(bool,bool)
-end
-
 --RegisterNUICallback setFocus
 RegisterNUICallback('setFocus', function(data, cb)
     setFocus(data.focus)
@@ -312,5 +306,60 @@ RegisterNUICallback('getPlayerList', function(data, cb)
     if players and names then 
         cb({players = players, names = names})
     end
+end)
+
+--RegisterNUICallback getLocationList
+RegisterNUICallback('getLocationList', function(data, cb)
+    local names = {}
+    for i, location in ipairs(Config.Locations) do
+        table.insert(names, location.name)
+        print(location.name)
+    end
+
+        cb({locations = names})
+end)
+
+--RegisterNUICallback getWeaponList
+RegisterNUICallback('getWeaponList', function(data, cb)
+    local names = {}
+    for i, weapon in ipairs(Config.WeaponList) do
+        table.insert(names, weapon.label)
+        print(weapon.label)
+    end
+
+        cb({weapons = names})
+end)
+
+--RegisterNUICallback kickPlayer
+RegisterNUICallback('kickPlayer', function(data, cb)
+
+    if GetPlayerFromServerId(data.id) == NetworkGetPlayerIndexFromPed(GetPlayerPed(-1)) then
+        gameMaster = false
+        TriggerServerEvent("endgameserverside")
+    end
+    TriggerServerEvent("kickplayerserverside", data.id)
+    cb({})
+end)
+
+--RegisterNUICallback setWeapon
+RegisterNUICallback('setWeapon', function(data, cb)
+    for i, weapon in ipairs(Config.WeaponList) do
+        if weapon.label == data.weaponName then
+            TriggerServerEvent("setweapon", weapon.name, data.checked)
+        end
+    end
+    cb({})
+end)
+
+--RegisterNUICallback setLocation
+RegisterNUICallback('setLocation', function(data, cb)
+    TriggerServerEvent("setlocation", data.locationName, data.checked)
+    cb({})
+end)
+
+--RegisterNUICallback startGame
+RegisterNUICallback('startGame', function(data, cb)
+    TriggerServerEvent("startgame")
+    cb({})
 end)
 
