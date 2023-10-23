@@ -13,6 +13,7 @@ let teamOnePlayerList = document.getElementById('teamOnePlayerList');
 let teamTwoPlayerList = document.getElementById('teamTwoPlayerList');
 let teamPlayersDisplay = document.getElementById('teamPlayersDisplay');
 let switchTeamButton = document.getElementById('switchTeamButton');
+let leaveGameButton = document.getElementById('leaveGameButton');
 let playerMenuCloseButton = document.getElementById('playerMenuCloseButton');
 teamPlayersDisplay.style.visibility = 'hidden'
 
@@ -79,6 +80,7 @@ function promptForKick(id) {
     confirmKickPlayerButton.onclick = function() {
         kickPlayer(id);
         resetKickPlayerVisibility();
+        teamPlayersDisplayToggle();
         fetch(`https://${GetParentResourceName()}/setFocus`, {
             method: 'POST',
             headers: {
@@ -180,6 +182,33 @@ function getTeamsPlayerList() {
         teamOnePlayerList.innerHTML = teamOneHTML;
         teamTwoPlayerList.innerHTML = teamTwoHTML;
     });
+}
+
+leaveGameButton.onclick = function() {
+    console.log('Leave Game Clicked');
+    resetPlayerMenuVisibility();
+    teamPlayersDisplayToggle();
+    fetch(`https://${GetParentResourceName()}/leaveGame`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body:""
+    })
+    .then(resp => {
+        return resp.json();
+    })
+    .then(resp => {
+        console.log(resp);
+    });
+    // set focus to false
+    fetch(`https://${GetParentResourceName()}/setFocus`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body:JSON.stringify({focus:false})
+    })
 }
 
 
@@ -322,7 +351,7 @@ fetch(`https://${GetParentResourceName()}/getPlayerList`, {
     elementHTML += `
     <tr>
     <td class="uk-margin">
-        <button id = "playerManagementCloseMenuButton" onclick = "closerPlayerManager()" class="closeMenuButton uk-button uk-button-secondary uk-width-1-1 uk-border-rounded closeButton" type="button">Close Menu</button>
+        <button id = "playerManagementCloseMenuButton" onclick = "closerPlayerManager()" class="closeMenuButton Active-Button uk-button uk-button-secondary uk-width-1-1 uk-border-rounded closeButton" type="button">Close Menu</button>
     </td>
     </tr>
     `;

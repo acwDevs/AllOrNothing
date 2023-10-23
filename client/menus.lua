@@ -41,93 +41,93 @@ local x,y = GetResolution()
 local Menu = {}
 Menu.__index = Menu
 
-function Menu.new(title,sub)
-    local self = setmetatable({}, Menu)
-    self.title = title
-    self.pool = NativeUI.CreatePool()
-    self.main = NativeUI.CreateMenu(title, sub,x/2.5,y/15)
-    self.pool:Add(self.main)
-    return self
-end
+-- function Menu.new(title,sub)
+--     local self = setmetatable({}, Menu)
+--     self.title = title
+--     self.pool = NativeUI.CreatePool()
+--     self.main = NativeUI.CreateMenu(title, sub,x/2.5,y/15)
+--     self.pool:Add(self.main)
+--     return self
+-- end
 
 
-function Menu:AddItemMain(title,sub)
-    local item = NativeUI.CreateItem(title, sub)
-    self.main:AddItem(item)
-    return item
-end
---Replace Main
-function Menu:ClearMain()
-    self.main:Clear()
-    self.pool:Add(self.main)
-    return self.main
-end
---Set Main
-function Menu:SetMain(title,sub)
-    self.main = NativeUI.CreateMenu(title, sub,x/2.5,y/15)
-    self.pool:Add(self.main)
-    return self.main
-end
+-- function Menu:AddItemMain(title,sub)
+--     local item = NativeUI.CreateItem(title, sub)
+--     self.main:AddItem(item)
+--     return item
+-- end
+-- --Replace Main
+-- function Menu:ClearMain()
+--     self.main:Clear()
+--     self.pool:Add(self.main)
+--     return self.main
+-- end
+-- --Set Main
+-- function Menu:SetMain(title,sub)
+--     self.main = NativeUI.CreateMenu(title, sub,x/2.5,y/15)
+--     self.pool:Add(self.main)
+--     return self.main
+-- end
 
---Create host menu
-local hostMenu = Menu.new("Host Menu", "Manage Game")
+-- --Create host menu
+-- local hostMenu = Menu.new("Host Menu", "Manage Game")
 
---Create player menu
-local playerManageItem = hostMenu:AddItemMain("Player Management","Manage Players")
-local playerManageMenu = Menu.new("Player Menu")
-playerManageItem.Activated = function(sender, item)
-    hostMenu.main:Visible(false)
-    playerManageMenu.main:Visible(true)
-end
---Create location menu
-local locationManageItem = hostMenu:AddItemMain("Location Management","Manage Locations")
-local locationMenu = Menu.new("Location Menu")
-locationManageItem.Activated = function(sender, item)
-    hostMenu.main:Visible(false)
-    locationMenu.main:Visible(true)
-end
---Populate location menu
-for i, location in ipairs(Config.Locations) do
-    local locationItem = UIMenuCheckboxItem.New(location.name, false, "Select this location")
-    locationMenu.main:AddItem(locationItem)
-    locationItem.CheckboxEvent = function(sender, item)
-        TriggerServerEvent("setlocation", location.name, locationItem.Checked)
-    end
-end
---Create Weapon menu
-local weaponManageItem = hostMenu:AddItemMain("Weapon Management","Manage Weapons")
-local weaponMenu = Menu.new("Weapon Menu")
-weaponManageItem.Activated = function(sender, item)
-    hostMenu.main:Visible(false)
-    weaponMenu.main:Visible(true)
-end
---Populate weapon menu
-for i, weapon in ipairs(Config.WeaponList) do
-    local weaponItem = UIMenuCheckboxItem.New(weapon.label, false, "Select this weapon")
-    weaponMenu.main:AddItem(weaponItem)
-    weaponItem.CheckboxEvent = function()
-        TriggerServerEvent("setweapon", weapon.name, weaponItem.Checked)
-    end
-end
---Create start game menu
-local startGameItem = hostMenu:AddItemMain("Start Game","Start Game")
-startGameItem.Activated = function(sender, item)
-    TriggerServerEvent("startgame")
-    hostMenu.main:Visible(false)
-end
+-- --Create player menu
+-- local playerManageItem = hostMenu:AddItemMain("Player Management","Manage Players")
+-- local playerManageMenu = Menu.new("Player Menu")
+-- playerManageItem.Activated = function(sender, item)
+--     hostMenu.main:Visible(false)
+--     playerManageMenu.main:Visible(true)
+-- end
+-- --Create location menu
+-- local locationManageItem = hostMenu:AddItemMain("Location Management","Manage Locations")
+-- local locationMenu = Menu.new("Location Menu")
+-- locationManageItem.Activated = function(sender, item)
+--     hostMenu.main:Visible(false)
+--     locationMenu.main:Visible(true)
+-- end
+-- --Populate location menu
+-- for i, location in ipairs(Config.Locations) do
+--     local locationItem = UIMenuCheckboxItem.New(location.name, false, "Select this location")
+--     locationMenu.main:AddItem(locationItem)
+--     locationItem.CheckboxEvent = function(sender, item)
+--         TriggerServerEvent("setlocation", location.name, locationItem.Checked)
+--     end
+-- end
+-- --Create Weapon menu
+-- local weaponManageItem = hostMenu:AddItemMain("Weapon Management","Manage Weapons")
+-- local weaponMenu = Menu.new("Weapon Menu")
+-- weaponManageItem.Activated = function(sender, item)
+--     hostMenu.main:Visible(false)
+--     weaponMenu.main:Visible(true)
+-- end
+-- --Populate weapon menu
+-- for i, weapon in ipairs(Config.WeaponList) do
+--     local weaponItem = UIMenuCheckboxItem.New(weapon.label, false, "Select this weapon")
+--     weaponMenu.main:AddItem(weaponItem)
+--     weaponItem.CheckboxEvent = function()
+--         TriggerServerEvent("setweapon", weapon.name, weaponItem.Checked)
+--     end
+-- end
+-- --Create start game menu
+-- local startGameItem = hostMenu:AddItemMain("Start Game","Start Game")
+-- startGameItem.Activated = function(sender, item)
+--     TriggerServerEvent("startgame")
+--     hostMenu.main:Visible(false)
+-- end
 
---Create player menu
-local playerMenu = Menu.new("Player Menu", "Change Teams/Leave Game")
-local team1  = playerMenu.pool:AddSubMenu(playerMenu.main, Config.team1Name,'Description', 1, 1)
-team1 = team1.SubMenu
-local team2  = playerMenu.pool:AddSubMenu(playerMenu.main, Config.team2Name,'Description', 1, 1)
-team2 = team2.SubMenu
-local leaveGameItem = playerMenu:AddItemMain("Leave Game","Leave Game")
-leaveGameItem.Activated = function(sender, item)
-    print(GetPlayerServerId(PlayerId()))
-    TriggerServerEvent("kickplayerserverside", GetPlayerServerId(PlayerId()))
-    playerMenu.main:Visible(false)
-end
+-- --Create player menu
+-- local playerMenu = Menu.new("Player Menu", "Change Teams/Leave Game")
+-- local team1  = playerMenu.pool:AddSubMenu(playerMenu.main, Config.team1Name,'Description', 1, 1)
+-- team1 = team1.SubMenu
+-- local team2  = playerMenu.pool:AddSubMenu(playerMenu.main, Config.team2Name,'Description', 1, 1)
+-- team2 = team2.SubMenu
+-- local leaveGameItem = playerMenu:AddItemMain("Leave Game","Leave Game")
+-- leaveGameItem.Activated = function(sender, item)
+--     print(GetPlayerServerId(PlayerId()))
+--     TriggerServerEvent("kickplayerserverside", GetPlayerServerId(PlayerId()))
+--     playerMenu.main:Visible(false)
+-- end
 
 --Set Game Master Status
 RegisterNetEvent("setgamemasterclient")
@@ -294,6 +294,12 @@ RegisterNUICallback('getWeaponList', function(data, cb)
     end
 
         cb({weapons = names})
+end)
+
+--RegisterNUICallback leaveGame
+RegisterNUICallback('leaveGame', function(data, cb)
+    TriggerServerEvent("kickplayerserverside", GetPlayerServerId(PlayerId()))
+    cb({})
 end)
 
 --RegisterNUICallback getTeamPlayerList

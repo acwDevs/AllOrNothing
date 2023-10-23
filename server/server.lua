@@ -387,6 +387,7 @@ function Game:removePlayers()
 end
 
 function Game:removePlayer(remove) 
+    print('remove player')
     for i, player in ipairs(self.players) do
         if player == remove then
             table.remove(self.players, i)
@@ -405,6 +406,7 @@ function Game:removePlayer(remove)
             if team == self.team2Name then
                 for i, team2player in ipairs(self.team2players) do
                     if team2player == player then
+                        print('found')
                         table.remove(self.team2players, i)
                         table.remove(self.team2Names, i)
                         self.team2Lives = self.team2Lives - 1
@@ -415,6 +417,8 @@ function Game:removePlayer(remove)
             TriggerClientEvent("leaveplayerclient", player)
             TriggerClientEvent("setplayerclient", player, false)
             self.playerCount = self.playerCount - 1
+            SetConvarReplicated("AllOrNothingTeam1", json.encode(self.team1Names))
+            SetConvarReplicated("AllOrNothingTeam2", json.encode(self.team2Names))
             SetConvarReplicated("AllOrNothingPC", tostring(self.playerCount))
             SetConvarReplicated("playerIDs", json.encode(self.players))
             SetConvarReplicated("playerNames", json.encode(self.names))

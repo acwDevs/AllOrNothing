@@ -34,6 +34,10 @@
     overflow: hidden;
 }
 
+#playerManagementCloseMenuButton {
+    margin-left: 20%;
+}
+
 .TeamsMenu {
     margin-top: 6px;
     padding-right: 0;
@@ -51,6 +55,13 @@
 
 }
 
+.closeMenuButton:hover {
+    background: #d70101;
+    color: #fff;
+
+
+}
+
 .teamNames {
     position:absolute;
     font-size: 1.5em;
@@ -61,8 +72,8 @@
 .playerNameButtons { 
     border-radius: 15px; 
 }
-.playerNameButtons:hover {
-}
+/* .playerNameButtons:hover {
+} */
 
 .team1 {
     left: 1%;
