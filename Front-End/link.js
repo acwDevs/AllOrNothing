@@ -1,4 +1,5 @@
 let hostMenu = document.getElementById('hostMenu');
+let playerMenu = document.getElementById('playerMenu'); 
 let playerManagementButton = document.getElementById('playerManagementButton');
 let playerManagementMenu = document.getElementById('playerManagementMenu');
 let locationManagementButton = document.getElementById('locationManagementButton');
@@ -11,6 +12,25 @@ let confirmKickPlayerButton = document.getElementById('confirmKickPlayerButton')
 let teamOnePlayerList = document.getElementById('teamOnePlayerList');
 let teamTwoPlayerList = document.getElementById('teamTwoPlayerList');
 let teamPlayersDisplay = document.getElementById('teamPlayersDisplay');
+let switchTeamButton = document.getElementById('switchTeamButton');
+let playerMenuCloseButton = document.getElementById('playerMenuCloseButton');
+teamPlayersDisplay.style.visibility = 'hidden'
+
+function teamPlayersDisplayToggle() {
+    if (teamPlayersDisplay.style.visibility === 'hidden') {
+        teamPlayersDisplay.style.visibility = 'visible';
+        teamPlayersDisplay.classList.add("uk-animation-fade");
+    }
+    else {
+        teamPlayersDisplay.style.visibility = 'hidden';
+        teamPlayersDisplay.classList.remove("uk-animation-fade");
+    }
+}
+
+function resetPlayerMenuVisibility() {
+    playerMenu.style.visibility = 'hidden';
+    playerMenu.classList.remove("uk-animation-fade");
+}
 
 function resetHostVisibility() {
     hostMenu.style.visibility = 'hidden';
@@ -85,6 +105,7 @@ function confirmGuns() {
 
 function startGame() {
     //Send checked status to server
+    teamPlayersDisplayToggle();
     fetch(`https://${GetParentResourceName()}/startGame`, {
         method: 'POST',
         headers: {
@@ -96,7 +117,7 @@ function startGame() {
         return resp.json();
     })
     .then(resp => {
-        console.log(resp);
+        console.log();
     });
 }
 
@@ -151,13 +172,45 @@ function getTeamsPlayerList() {
         let teamOneHTML = ``;
         let teamTwoHTML = ``;
         for (let i = 0; i < resp.teamOne.length; i++) {
-            teamOneHTML += `<button class="playerNameButtons Active-Button uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="button">${resp.teamOne[i]}</button>`;
+            teamOneHTML += `<button class="uk-resize playerNameButtons Active-Button uk-button uk-button-primary uk-button-medium uk-border-rounded" type="button">${resp.teamOne[i]}</button>`;
         }
         for (let i = 0; i < resp.teamTwo.length; i++) {
-            teamTwoHTML += `<button class="playerNameButtons Active-Button uk-button uk-button-primary uk-width-1-1 uk-border-rounded" type="button">${resp.teamTwo[i]}</button>`;
+            teamTwoHTML += `<button class="uk-resize playerNameButtons Active-Button uk-button uk-button-primary uk-button-medium uk-border-rounded" type="button">${resp.teamTwo[i]}</button>`;
         }
         teamOnePlayerList.innerHTML = teamOneHTML;
         teamTwoPlayerList.innerHTML = teamTwoHTML;
+    });
+}
+
+
+playerMenuCloseButton.onclick = function() {
+    teamPlayersDisplayToggle();
+    resetPlayerMenuVisibility();
+    fetch(`https://${GetParentResourceName()}/setFocus`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body:JSON.stringify({focus:false})
+    })
+    .then(resp => {})
+    .then(resp => {});
+}
+
+switchTeamButton.onclick = function() {
+    console.log('Switch Team Clicked');
+    fetch(`https://${GetParentResourceName()}/switchTeam`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body:""
+    })
+    .then(resp => {
+        return resp.json();
+    })
+    .then(resp => {
+        console.log(resp);
     });
 }
 
@@ -290,6 +343,7 @@ function closerPlayerManager() {
 }
 
 hostMenuCloseButton.onclick = function() {
+    teamPlayersDisplayToggle();
     resetHostVisibility()
     console.log('Host Menu Close Clicked');
     fetch(`https://${GetParentResourceName()}/setFocus`, {
@@ -308,12 +362,24 @@ window.addEventListener('message', function(event) {
     console.log('Sent NUI Message');
     if (event.data.type === 'hostMenu') {
         if (event.data.focus === true) {
+            teamPlayersDisplayToggle();
             // Do something when the NUI is ready
             hostMenu.style.visibility = 'visible';
             hostMenu.classList.add("uk-animation-fade");
         }
         else if (event.data.focus === false) {
             resetHostVisibility()
+        }
+    }
+    if (event.data.type === 'playerMenu') {
+        teamPlayersDisplayToggle();
+        if (event.data.focus === true) {
+            // Do something when the NUI is ready
+            playerMenu.style.visibility = 'visible';
+            playerMenu.classList.add("uk-animation-fade");
+        }
+        else if (event.data.focus === false) {
+            resetPlayerMenuVisibility()
         }
     }
     if(event.data.type === 'teamListUpdate') {

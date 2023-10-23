@@ -155,7 +155,6 @@ local coords = Config.MarkerCoords
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-            playerMenu.pool:ProcessMenus()
         --Press F to open the menu
         if IsControlJustPressed(0,49) then -- F key
             if gameMaster == true then
@@ -166,66 +165,15 @@ Citizen.CreateThread(function()
                     type = "hostMenu",
                     focus = focused
                 })
-            
-                -- playerManageMenu:ClearMain()          
-                -- local players = GetConvar("playerIDs",tostring({}))
-                -- local players = json.decode(players)
-                -- local names = GetConvar("playerNames",tostring({}))
-                -- local names = json.decode(names)
-                -- if players and names then 
-                --     for i, player in ipairs(players) do
-                --         local subMenu = playerManageMenu.pool:AddSubMenu(playerManageMenu.main, names[i],player,1)
-                --         subMenu = subMenu.SubMenu
-                --         local kick = NativeUI.CreateItem("Kick", "Kick the player from the game")
-                --         kick.Activated = function(sender, item)
-                            
-                --             if GetPlayerFromServerId(player) == NetworkGetPlayerIndexFromPed(GetPlayerPed(-1)) then
-                --                 gameMaster = false
-                --                 TriggerServerEvent("endgameserverside")
-                --             end
-                --             TriggerServerEvent("kickplayerserverside", player)
-                --             subMenu:Visible(false)
-                --             subMenu = nil
-                --         end
-                --         subMenu:AddItem(kick)
-                --     end
-                -- end
-                -- hostMenu.main:Visible(not hostMenu.main:Visible())
             end
             if player == true then
-                team1:Clear()
-                team2:Clear()
-                local joinTeam1Item = NativeUI.CreateItem("~g~Join","Join")
-                joinTeam1Item.Activated = function(sender, item)
-                    TriggerServerEvent("changeteamserver", Config.team1Name)
-                    team1:Visible(false)
-                end
-                team1:AddItem(joinTeam1Item)
-                --Add Players Item
-                local team1PlayerTag = NativeUI.CreateItem("~b~Player List","Players")
-                team1:AddItem(team1PlayerTag)
-                local team1Names = GetConvar("AllOrNothingTeam1",tostring({}))
-                team1Names = json.decode(team1Names)
-                for i, name in ipairs(team1Names) do
-                    local item = NativeUI.CreateItem(name, name)
-                    team1:AddItem(item)
-                end
-                --Join team 2
-                local joinTeam2Item = NativeUI.CreateItem("~g~Join","Join")
-                joinTeam2Item.Activated = function(sender, item)
-                    TriggerServerEvent("changeteamserver", Config.team2Name)
-                    team2:Visible(false)
-                end
-                team2:AddItem(joinTeam2Item)
-                local team2PlayerTag = NativeUI.CreateItem("~b~Player List","Players")
-                team2:AddItem(team2PlayerTag)
-                local team2Names = GetConvar("AllOrNothingTeam2",tostring({}))
-                team2Names = json.decode(team2Names)
-                for i, name in ipairs(team2Names) do
-                    local item = NativeUI.CreateItem(name, name)
-                    team2:AddItem(item)
-                end
-                playerMenu.main:Visible(not playerMenu.main:Visible())
+                focused = not focused
+                print(focused)
+                SetNuiFocus(focused, focused)
+                SendNUIMessage({
+                    type = "playerMenu",
+                    focus = focused
+                })
             end
         end
     end
@@ -288,6 +236,12 @@ end)
 --RegisterNUICallback setFocus
 RegisterNUICallback('setFocus', function(data, cb)
     setFocus(data.focus)
+    cb({})
+end)
+
+--RegisterNUICallback changeTeam
+RegisterNUICallback('switchTeam', function(data, cb)
+    TriggerServerEvent("changeteamserver",GetPlayerServerId(PlayerId()))
     cb({})
 end)
 
@@ -383,6 +337,6 @@ end)
 --RegisterNUICallback startGame
 RegisterNUICallback('startGame', function(data, cb)
     TriggerServerEvent("startgame")
-    cb({})
+    cb({started = true})
 end)
 

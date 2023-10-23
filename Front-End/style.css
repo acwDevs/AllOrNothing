@@ -1,6 +1,9 @@
 #hostMenu {
     visibility: hidden;
 }
+#playerMenu {
+    visibility: hidden;
+}
 #playerManagementMenu {
     visibility: hidden;
 }
@@ -9,6 +12,15 @@
 }
 #weaponManagementMenu {
     visibility: hidden;
+}
+
+/* Also hidden in js file idk why I had to do it. */
+#teamPlayersDisplay {
+    visibility: hidden;
+}
+
+#teamPlayersDisplayBody {
+    padding-bottom: 20px;
 }
 
 #confirmKickPlayerMenu {
@@ -21,16 +33,77 @@
     max-width: 100%;
     overflow: hidden;
 }
+
 .TeamsMenu {
-    width: 800px;
-    height: 400px;
+    margin-top: 6px;
+    padding-right: 0;
+    height: 100%;
+    width: 100%;
+    max-height: 22%;
+    max-width: 28.4%;
+}
+.TeamsTable {
+    background: #fff;
+    min-height: 40%;
+    padding: 0;
+    margin: 0;
+    top: 0;
+
 }
 
+.teamNames {
+    position:absolute;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #000;
+}
+
+.playerNameButtons { 
+    border-radius: 15px; 
+}
+.playerNameButtons:hover {
+}
+
+.team1 {
+    left: 1%;
+}
+
+.team2 {
+    right: 1%;
+}
+
+/* Designing for scroll-bar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: gainsboro;
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: #0e6dcd;
+    color: #fff;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
 .playerNameButtons {
-    width: 200px
+    height: 100%;
+    display: block; 
+    margin-bottom: 0.5em; 
 }
 
 .Active-Button {
+    border-radius: 15px; 
     border: solid 10px;
     transition: border-width 0.1s linear;
 }

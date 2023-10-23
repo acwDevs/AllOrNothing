@@ -418,6 +418,9 @@ function Game:removePlayer(remove)
             SetConvarReplicated("AllOrNothingPC", tostring(self.playerCount))
             SetConvarReplicated("playerIDs", json.encode(self.players))
             SetConvarReplicated("playerNames", json.encode(self.names))
+            for i, player in ipairs(self.players) do
+                TriggerClientEvent("getTeamPlayerListClient", player)
+            end
         end
     end
 end
@@ -439,15 +442,11 @@ end
 
 function Game:changeTeam(player, newTeam)
     local oldTeam = self:isPlayerOnTeam(player)
-    print(oldTeam, newTeam)
-    if oldTeam == newTeam then
-        print('Same team')
-        -- Player is already on the new team, do nothing
-        return
-    end
+    print(oldTeam)
     if oldTeam ~= 0 then
-        print('Different team')
+        print('Changed team')
         -- Remove player from old team
+        print(oldTeam == self.team2Name)
         if oldTeam == self.team1Name then
             for i, team1player in ipairs(self.team1players) do
                 if team1player == player then
@@ -459,8 +458,7 @@ function Game:changeTeam(player, newTeam)
                     break
                 end
             end
-        end
-        if oldTeam == self.team2Name then
+        else 
             for i, team2player in ipairs(self.team2players) do
                 if team2player == player then
                     table.remove(self.team2players, i)
@@ -472,6 +470,7 @@ function Game:changeTeam(player, newTeam)
                 end
             end
         end
+
         SetConvarReplicated("AllOrNothingTeam2", json.encode(self.team2Names))
         SetConvarReplicated("AllOrNothingTeam1", json.encode(self.team1Names))
         for i, player in ipairs(self.players) do
@@ -479,10 +478,10 @@ function Game:changeTeam(player, newTeam)
         end
     end
     -- Add player to new team
-    if newTeam == self.team1Name then
-        table.insert(self.team1players, player)
-    elseif newTeam == self.team2Name then
+    if oldTeam == self.team1Name then
         table.insert(self.team2players, player)
+    else
+        table.insert(self.team1players, player)
     end
 end
 
@@ -498,8 +497,9 @@ end)
 --Change team server
 RegisterServerEvent('changeteamserver')
 -- Define the event handler function
-AddEventHandler('changeteamserver', function(newTeam)
+AddEventHandler('changeteamserver', function(id)
     local player = source
+    local newTeam = game:isPlayerOnTeam(player)
     game:changeTeam(player, newTeam)
 end)
 
@@ -553,6 +553,7 @@ RegisterServerEvent('kickplayerserverside')
 -- Define the event handler function
 AddEventHandler('kickplayerserverside', function(player)
     game:removePlayer(player)
+    
 end)
 
 -- Set weapon event
