@@ -1,0 +1,1 @@
+This is a script that I made for the popular GTA5 modding platform called FiveM. I have done a lot of private development work on FiveM but I decided to make this script open source. I had a great time working on this and hope others can build off it. 
